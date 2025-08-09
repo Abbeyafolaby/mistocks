@@ -7,19 +7,43 @@ if (registerForm) {
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value;
 
-    const res = await fetch(`${API_BASE}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // Add credentials for cookies
-      body: JSON.stringify({ email, password }),
-    });
+    // Basic validation
+    if (!email || !password || !username) {
+      alert("Please fill in all fields");
+      return;
+    }
 
-    if (res.ok) {
-      alert("Registered successfully! Please login.");
-      window.location.href = "login.html";
-    } else {
-      alert("Registration failed!");
+    if (username.length < 3) {
+      alert("Username must be at least 3 characters long");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password, username }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registered successfully! Please login.");
+        window.location.href = "login.html";
+      } else {
+        alert(data.error || "Registration failed!");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Network error. Please try again.");
     }
   });
 }
@@ -32,18 +56,30 @@ if (loginForm) {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const res = await fetch(`${API_BASE}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // important for cookies
-      body: JSON.stringify({ email, password }),
-    });
+    if (!email || !password) {
+      alert("Please fill in all fields");
+      return;
+    }
 
-    if (res.ok) {
-      alert("Login successful!");
-      window.location.href = "dashboard.html";
-    } else {
-      alert("Invalid credentials!");
+    try {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+      } else {
+        alert(data.error || "Invalid credentials!");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Network error. Please try again.");
     }
   });
 }
