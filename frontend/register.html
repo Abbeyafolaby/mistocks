@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./css/output.css" rel="stylesheet">
+    <title>Register</title>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded shadow w-96">
+    <h1 class="text-2xl font-bold mb-4">Register</h1>
+    <form id="registerForm" class="space-y-4">
+        <input type="email" id="email" placeholder="Email" class="border p-2 w-full" required />
+        <input type="password" id="password" placeholder="Password" class="border p-2 w-full" required />
+        <button class="bg-blue-500 text-white px-4 py-2 w-full">Register</button>
+    </form>
+    <p class="mt-4 text-sm">
+        Already have an account?
+        <a href="login.html" class="text-blue-500">Login</a>
+    </p>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Tracker</title>
+    <link href="./css/output.css" rel="stylesheet">    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    </head>
+    <body class="min-h-screen bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-white"></i>
+            </div>
+            <span class="text-xl font-bold text-slate-900">Portfolio Tracker</span>
+            </div>
+            <button 
+            onclick="window.location.href='login.html'" 
+            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-600/90 h-10 px-4 py-2"
+            >
+            Sign In
+            </button>
+        </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+        <h1 class="text-4xl font-bold text-slate-900 sm:text-5xl lg:text-6xl">
+            Track Your Investment Portfolio
+        </h1>
+        <p class="mt-6 text-xl text-slate-600 max-w-3xl mx-auto">
+            Take control of your investments with our comprehensive portfolio tracking platform. 
+            Monitor performance, calculate gains/losses, and make informed decisions.
+        </p>
+        <div class="mt-10">
+            <button 
+            onclick="window.location.href='/api/login'"
+            class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-600/90 h-11 px-8 py-3 text-lg"
+            >
+            Get Started Free
+            </button>
+        </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Feature Card 1 -->
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-6 pt-6">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-600/10 rounded-lg mb-4">
+                <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Portfolio Overview</h3>
+            <p class="text-slate-600">
+                Get a comprehensive view of your entire investment portfolio in one place.
+            </p>
+            </div>
+        </div>
+
+        <!-- Feature Card 2 -->
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-6 pt-6">
+            <div class="flex items-center justify-center w-12 h-12 bg-green-500/10 rounded-lg mb-4">
+                <i data-lucide="trending-up" class="w-6 h-6 text-green-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Real-time Calculations</h3>
+            <p class="text-slate-600">
+                Automatically calculate your gains, losses, and portfolio performance.
+            </p>
+            </div>
+        </div>
+
+        <!-- Feature Card 3 -->
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-6 pt-6">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-600/10 rounded-lg mb-4">
+                <i data-lucide="dollar-sign" class="w-6 h-6 text-blue-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Manual Price Updates</h3>
+            <p class="text-slate-600">
+                Enter current stock prices manually to keep your portfolio up to date.
+            </p>
+            </div>
+        </div>
+
+        <!-- Feature Card 4 -->
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+            <div class="p-6 pt-6">
+            <div class="flex items-center justify-center w-12 h-12 bg-green-500/10 rounded-lg mb-4">
+                <i data-lucide="shield" class="w-6 h-6 text-green-600"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Secure & Private</h3>
+            <p class="text-slate-600">
+                Your investment data is secure and private, accessible only to you.
+            </p>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    </body>
+    </html>
