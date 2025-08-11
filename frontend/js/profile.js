@@ -1,6 +1,9 @@
-const API_AUTH = "http://localhost:3000/api/auth";
-const API_PROFILE = "http://localhost:3000/api/profile";
-const API_INVESTMENTS = "http://localhost:3000/api/investments";
+import config from './config.js';
+
+const API_AUTH = `${config.API_URL}/api/auth`;
+const API_PROFILE = `${config.API_URL}/api/profile`;
+const API_INVESTMENTS = `${config.API_URL}/api/investments`;
+
 
 // Show message function
 function showMessage(message, type = 'success') {

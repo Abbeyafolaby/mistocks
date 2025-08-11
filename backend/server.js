@@ -15,8 +15,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // CORS configuration (adjust origin as needed)
+const PORT = process.env.PORT || 3000;
+const CORS_ORIGIN = process.env.NODE_ENV === 'production' 
+  ? 'https://your-frontend-domain.netlify.app'
+  : 'http://localhost:5500';
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: CORS_ORIGIN,
   credentials: true
 }));
 
@@ -32,8 +37,12 @@ app.use('/api/profile', profileRoutes);
 // Serve static files from frontend directory
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// Add health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Start server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => 
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`)
 );

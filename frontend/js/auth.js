@@ -1,4 +1,6 @@
-const API_BASE = "http://localhost:3000/api/auth"; 
+import config from './config.js';
+
+const API_AUTH = `${config.API_URL}/api/auth`; 
 
 // Register
 const registerForm = document.getElementById("registerForm");
@@ -26,7 +28,7 @@ if (registerForm) {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/register`, {
+      const res = await fetch(`${API_AUTH}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -62,7 +64,7 @@ if (loginForm) {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/login`, {
+      const res = await fetch(`${API_AUTH}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
