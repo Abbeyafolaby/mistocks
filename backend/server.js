@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import investmentRoutes from './routes/investmentRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,7 +13,6 @@ dotenv.config(); // Load environment variables
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 // CORS configuration (adjust origin as needed)
 app.use(cors({
@@ -26,10 +26,8 @@ app.use(cookieParser()); // Parse cookies
 
 // Routes
 app.use('/api/auth', authRoutes);
-
-
-// Investment routes
-app.use("/api/investments", investmentRoutes);
+app.use('/api/investments', investmentRoutes);
+app.use('/api/profile', profileRoutes);
 
 // Serve static files from frontend directory
 app.use(express.static(path.join(__dirname, '../frontend')));
