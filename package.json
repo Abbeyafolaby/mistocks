@@ -7,7 +7,7 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "build": "cd frontend && npm run build",
-    "postinstall": "npm install --prefix backend"
+    "postinstall": "cd backend && npm install"
   },
   "keywords": [],
   "author": "Abiodun Afolabi",
