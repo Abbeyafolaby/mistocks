@@ -2,150 +2,276 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>StockVista Dashboard</title>
-  <link href="./css/output.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - StockVista</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'slide-up': 'slideUp 0.3s ease-out',
+            'fade-in': 'fadeIn 0.5s ease-out',
+          },
+          keyframes: {
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass-morphism {
+      backdrop-filter: blur(16px) saturate(180%);
+      background-color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.125);
+    }
+    .gradient-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-6">
-  <!-- User Info -->
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold">📊 StockVista Dashboard</h1>
-    <div class="flex items-center space-x-4">
-      <div id="userEmail" class="text-lg text-gray-700"></div>
-      <a href="profile.html" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-        Profile
-      </a>
-      <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-        Logout
-      </button>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+  <!-- Navigation -->
+  <nav class="glass-morphism sticky top-0 z-50 border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo and Title -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              StockVista
+            </h1>
+            <p class="text-xs text-slate-500 hidden sm:block">Portfolio Dashboard</p>
+          </div>
+        </div>
+        
+        <!-- User Info and Actions -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <!-- User Info -->
+          <div class="hidden sm:flex items-center space-x-3">
+            <div class="text-right">
+              <div id="userEmail" class="text-sm font-medium text-slate-700">Loading...</div>
+              <div class="text-xs text-slate-500">Welcome back</div>
+            </div>
+            <div class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+              <i data-lucide="user" class="w-5 h-5 text-white"></i>
+            </div>
+          </div>
+          
+          <!-- Mobile User Icon -->
+          <div class="sm:hidden w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
+            <i data-lucide="user" class="w-4 h-4 text-white"></i>
+          </div>
+          
+          <!-- Actions Menu -->
+          <div class="relative">
+            <button id="menu-button" class="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+              <i data-lucide="more-vertical" class="w-5 h-5 text-slate-600"></i>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 glass-morphism rounded-xl shadow-xl z-50">
+              <div class="py-2">
+                <a href="profile.html" class="flex items-center space-x-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors">
+                  <i data-lucide="settings" class="w-4 h-4"></i>
+                  <span>Profile Settings</span>
+                </a>
+                <button onclick="exportData()" class="flex items-center space-x-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 transition-colors w-full text-left">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                  <span>Export Data</span>
+                </button>
+                <hr class="my-2 border-slate-200">
+                <button onclick="logout()" class="flex items-center space-x-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left">
+                  <i data-lucide="log-out" class="w-4 h-4"></i>
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </nav>
 
-  <!-- Portfolio Summary -->
-  <div class="bg-white shadow-lg rounded-lg p-4 mb-6">
-    <h2 class="text-xl font-semibold mb-4">Portfolio Summary</h2>
-    <div id="portfolioSummary">
-      <!-- Summary will be populated by JavaScript -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Portfolio Summary -->
+    <div class="mb-8 animate-fade-in">
+      <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="pie-chart" class="w-7 h-7 text-blue-600"></i>
+        Portfolio Overview
+      </h2>
+      <div id="portfolioSummary" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Summary cards will be populated by JavaScript -->
+      </div>
     </div>
-  </div>
 
-  <!-- Add Investment Form -->
-  <div class="bg-white shadow-lg rounded-lg p-4 mb-6">
-    <h2 class="text-xl font-semibold mb-4">Add New Investment</h2>
-    <form id="investmentForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div>
-        <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date *</label>
-        <input type="date" id="date" name="date" class="border p-2 rounded w-full" required />
-      </div>
+    <!-- Add Investment Section -->
+    <div class="glass-morphism rounded-2xl shadow-xl p-6 mb-8 animate-slide-up">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <i data-lucide="plus-circle" class="w-6 h-6 text-green-600"></i>
+        Add New Investment
+      </h2>
       
-      <div>
-        <label for="symbol" class="block text-sm font-medium text-gray-700 mb-1">Stock Symbol *</label>
-        <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL" class="border p-2 rounded w-full" required />
-      </div>
-      
-      <div>
-        <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
-        <input type="text" id="company_name" name="company_name" placeholder="e.g., Apple Inc." class="border p-2 rounded w-full" required />
-      </div>
-      
-      <div>
-        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
-        <input type="number" id="quantity" name="quantity" placeholder="Number of shares" class="border p-2 rounded w-full" min="1" step="1" required />
-      </div>
-      
-      <div>
-        <label for="purchase_price" class="block text-sm font-medium text-gray-700 mb-1">Purchase Price (₦) *</label>
-        <input type="number" id="purchase_price" name="purchase_price" placeholder="Price per share" class="border p-2 rounded w-full" step="0.01" min="0" required />
-      </div>
-      
-      <div>
-        <label for="current_price" class="block text-sm font-medium text-gray-700 mb-1">Current Price (₦)</label>
-        <input type="number" id="current_price" name="current_price" placeholder="Current price per share" class="border p-2 rounded w-full" step="0.01" min="0" />
-      </div>
-      
-      <div class="md:col-span-2 lg:col-span-3">
-        <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 w-full md:w-auto">
-          Add Investment
-        </button>
-      </div>
-    </form>
-  </div>
+      <form id="investmentForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label for="date" class="block text-sm font-semibold text-slate-700">Date *</label>
+          <input type="date" id="date" name="date" 
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+            required />
+        </div>
+        
+        <div class="space-y-2">
+          <label for="symbol" class="block text-sm font-semibold text-slate-700">Stock Symbol *</label>
+          <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL" 
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all uppercase" 
+            required />
+        </div>
+        
+        <div class="space-y-2">
+          <label for="company_name" class="block text-sm font-semibold text-slate-700">Company Name *</label>
+          <input type="text" id="company_name" name="company_name" placeholder="e.g., Apple Inc." 
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+            required />
+        </div>
+        
+        <div class="space-y-2">
+          <label for="quantity" class="block text-sm font-semibold text-slate-700">Quantity *</label>
+          <input type="number" id="quantity" name="quantity" placeholder="Number of shares" 
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+            min="1" step="1" required />
+        </div>
+        
+        <div class="space-y-2">
+          <label for="purchase_price" class="block text-sm font-semibold text-slate-700">Purchase Price (₦) *</label>
+          <input type="number" id="purchase_price" name="purchase_price" placeholder="Price per share" 
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+            step="0.01" min="0" required />
+        </div>
+        
+        <div class="space-y-2">
+          <label for="current_price" class="block text-sm font-semibold text-slate-700">Current Price (₦)</label>
+          <input type="number" id="current_price" name="current_price" placeholder="Current price per share" 
+            class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+            step="0.01" min="0" />
+        </div>
+        
+        <div class="sm:col-span-2 lg:col-span-3 flex justify-center pt-4">
+          <button type="submit" 
+            class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-semibold flex items-center gap-2">
+            <i data-lucide="plus" class="w-5 h-5"></i>
+            Add Investment
+          </button>
+        </div>
+      </form>
+    </div>
 
-  <!-- Investments Table -->
-  <div class="bg-white shadow-lg rounded-lg p-4">
-    <h2 class="text-xl font-semibold mb-4">Your Investments</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full table-auto border-collapse">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="p-2 text-left">Date</th>
-            <th class="p-2 text-left">Symbol</th>
-            <th class="p-2 text-left">Company</th>
-            <th class="p-2 text-right">Quantity</th>
-            <th class="p-2 text-right">Purchase Price</th>
-            <th class="p-2 text-right">Current Price</th>
-            <th class="p-2 text-right">Purchase Value</th>
-            <th class="p-2 text-right">Current Value</th>
-            <th class="p-2 text-right">Gain/Loss</th>
-            <th class="p-2 text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="investmentsTable">
-          <!-- Populated via JS -->
-        </tbody>
-      </table>
+    <!-- Investments Table -->
+    <div class="glass-morphism rounded-2xl shadow-xl overflow-hidden animate-slide-up">
+      <div class="p-6 border-b border-slate-200">
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <i data-lucide="portfolio" class="w-6 h-6 text-blue-600"></i>
+          Your Investments
+        </h2>
+      </div>
+      
+      <!-- Mobile Cards View -->
+      <div id="mobileInvestments" class="lg:hidden">
+        <!-- Mobile investment cards will be populated by JavaScript -->
+      </div>
+      
+      <!-- Desktop Table View -->
+      <div class="hidden lg:block overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Date</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-slate-700">Stock</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700">Quantity</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700">Purchase Price</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700">Current Price</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700">Purchase Value</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700">Current Value</th>
+              <th class="px-6 py-4 text-right text-sm font-semibold text-slate-700">Gain/Loss</th>
+              <th class="px-6 py-4 text-center text-sm font-semibold text-slate-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="investmentsTable" class="divide-y divide-slate-200">
+            <!-- Desktop table rows will be populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <!-- Price Update Modal -->
-  <div id="priceUpdateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-      <div class="mt-3">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Update Current Price</h3>
-        <p class="text-sm text-gray-600 mb-4">Update the current price for <span id="modalSymbol" class="font-semibold"></span></p>
+  <div id="priceUpdateModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="glass-morphism rounded-2xl shadow-2xl w-full max-w-md animate-slide-up">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="edit" class="w-5 h-5 text-blue-600"></i>
+            Update Price
+          </h3>
+          <button onclick="hideUpdatePriceModal()" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+            <i data-lucide="x" class="w-5 h-5 text-slate-400"></i>
+          </button>
+        </div>
+        
+        <p class="text-slate-600 mb-6">Update the current price for <span id="modalSymbol" class="font-semibold text-slate-900"></span></p>
         
         <form id="priceUpdateForm">
-          <div class="mb-4">
-            <label for="modalCurrentPrice" class="block text-sm font-medium text-gray-700 mb-2">Current Price (₦)</label>
-            <input 
-              type="number" 
-              id="modalCurrentPrice" 
-              step="0.01" 
-              min="0" 
-              class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
-              placeholder="Enter current price"
-              required 
-            />
-          </div>
-          
-          <div class="flex justify-end space-x-3">
-            <button 
-              type="button" 
-              onclick="hideUpdatePriceModal()"
-              class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Update Price
-            </button>
+          <div class="space-y-4">
+            <div>
+              <label for="modalCurrentPrice" class="block text-sm font-semibold text-slate-700 mb-2">
+                Current Price (₦)
+              </label>
+              <input type="number" id="modalCurrentPrice" step="0.01" min="0" 
+                class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                placeholder="Enter current price" required />
+            </div>
+            
+            <div class="flex gap-3 pt-4">
+              <button type="button" onclick="hideUpdatePriceModal()" 
+                class="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors font-medium">
+                Cancel
+              </button>
+              <button type="submit" 
+                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-xl hover:shadow-lg transition-all font-medium">
+                Update Price
+              </button>
+            </div>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- Click outside modal to close -->
-  <script>
-    document.getElementById('priceUpdateModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        hideUpdatePriceModal();
-      }
-    });
-  </script>
+  <!-- Loading Spinner -->
+  <div id="loadingSpinner" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40 flex items-center justify-center">
+    <div class="glass-morphism rounded-2xl p-8 flex flex-col items-center gap-4">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="text-slate-700 font-medium">Loading...</p>
+    </div>
+  </div>
 
-<script src="js/dashboard.js"></script>
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+  </script>
+  
+  <!-- Include your existing dashboard.js file -->
+  <script src="js/dashboard.js"></script>
 </body>
 </html>

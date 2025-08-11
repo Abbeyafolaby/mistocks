@@ -194,6 +194,88 @@ async function loadInvestments() {
 
     // Calculate and display portfolio summary
     displayPortfolioSummary(data);
+
+    // Mobile cards view
+    const mobileContainer = document.getElementById("mobileInvestments");
+    mobileContainer.innerHTML = "";
+
+    if (data.length === 0) {
+      mobileContainer.innerHTML = `
+        <div class="p-6 text-center text-slate-500">
+          No investments found. Add your first investment above!
+        </div>
+      `;
+      return;
+    }
+
+    data.forEach(inv => {
+      const gainLossClass = inv.gain_loss_value >= 0 ? "text-green-600" : "text-red-600";
+      const hasCurrentPrice = inv.current_price !== null;
+      
+      mobileContainer.innerHTML += `
+        <div class="p-4 border-b border-slate-200">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h3 class="font-bold text-slate-900">${inv.symbol}</h3>
+              <p class="text-sm text-slate-600">${inv.company_name}</p>
+            </div>
+            <div class="flex gap-2">
+              <button 
+                onclick="showUpdatePriceModal(${inv.id}, '${inv.symbol}', ${inv.current_price})"
+                class="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition-colors"
+              >
+                Update
+              </button>
+              <button 
+                onclick="deleteInvestment(${inv.id}, '${inv.symbol}')"
+                class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p class="text-slate-600">Purchase Date</p>
+              <p class="font-medium">${new Date(inv.date).toLocaleDateString()}</p>
+            </div>
+            <div>
+              <p class="text-slate-600">Quantity</p>
+              <p class="font-medium">${inv.quantity} shares</p>
+            </div>
+            <div>
+              <p class="text-slate-600">Purchase Price</p>
+              <p class="font-medium">₦${parseFloat(inv.purchase_price).toFixed(2)}</p>
+            </div>
+            <div>
+              <p class="text-slate-600">Current Price</p>
+              <p class="font-medium">${hasCurrentPrice ? `₦${parseFloat(inv.current_price).toFixed(2)}` : '-'}</p>
+            </div>
+            <div>
+              <p class="text-slate-600">Total Investment</p>
+              <p class="font-medium">₦${parseFloat(inv.purchase_value).toFixed(2)}</p>
+            </div>
+            <div>
+              <p class="text-slate-600">Current Value</p>
+              <p class="font-medium">
+                ${hasCurrentPrice ? `₦${parseFloat(inv.current_value).toFixed(2)}` : '-'}
+              </p>
+            </div>
+          </div>
+          
+          ${hasCurrentPrice ? `
+            <div class="mt-4 pt-4 border-t border-slate-200">
+              <p class="text-slate-600 text-sm">Gain/Loss</p>
+              <p class="font-bold ${gainLossClass}">
+                ₦${parseFloat(inv.gain_loss_value).toFixed(2)}
+                <span class="text-sm">(${parseFloat(inv.gain_loss_percent).toFixed(2)}%)</span>
+              </p>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    });
   } catch (error) {
     console.error('Error loading investments:', error);
   }
@@ -335,6 +417,85 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('Investment form not found!');
   }
 });
+
+
+    // Show/hide loading spinner
+    function showLoading() {
+      document.getElementById('loadingSpinner').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingSpinner').classList.add('hidden');
+    }
+
+    // Mobile menu toggle
+    document.getElementById('menu-button').addEventListener('click', function() {
+      const dropdown = document.getElementById('dropdown-menu');
+      dropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const menuButton = document.getElementById('menu-button');
+      const dropdown = document.getElementById('dropdown-menu');
+      
+      if (!menuButton.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+
+        // Export data function
+    async function exportData() {
+      try {
+        showLoading();
+        const res = await fetch(API_INVESTMENTS, {
+          method: "GET",
+          credentials: "include"
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const investments = await res.json();
+        
+        // Create CSV content
+        const headers = ['Date', 'Symbol', 'Company', 'Quantity', 'Purchase Price', 'Current Price', 'Purchase Value', 'Current Value', 'Gain/Loss'];
+        const csvContent = [
+          headers.join(','),
+          ...investments.map(inv => [
+            inv.date,
+            inv.symbol,
+            `"${inv.company_name}"`,
+            inv.quantity,
+            inv.purchase_price,
+            inv.current_price || '',
+            inv.purchase_value || '',
+            inv.current_value || '',
+            inv.gain_loss_value || ''
+          ].join(','))
+        ].join('\n');
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `stockvista-investments-${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        hideLoading();
+        alert('Investment data exported successfully!');
+      } catch (error) {
+        hideLoading();
+        console.error('Error exporting data:', error);
+        alert('Failed to export data');
+      }
+    }
 
 // Initial load
 loadInvestments();
