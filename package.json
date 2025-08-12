@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/server.js",
+    "db:init" : "psql $DATABASE_URL -f database.sql"
   },
   "keywords": [],
   "author": "Abiodun Afolabi",

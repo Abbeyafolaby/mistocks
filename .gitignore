@@ -1,7 +1,6 @@
 .env
 node_modules
 tailwind-run.txt
-database.sql
 .DS_Store
 
 # Local Netlify folder
