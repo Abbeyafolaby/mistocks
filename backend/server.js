@@ -17,8 +17,8 @@ const __dirname = path.dirname(__filename);
 // CORS configuration (adjust origin as needed)
 const PORT = process.env.PORT || 3000;
 const CORS_ORIGIN = process.env.NODE_ENV === 'production' 
-  ? 'https://your-frontend-domain.netlify.app'
-  : 'http://localhost:5500';
+  ? 'https://mistockvista.netlify.app'
+  : 'http://localhost:3000';
 
 app.use(cors({
   origin: CORS_ORIGIN,
